@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#102a43"><link rel="manifest" href="manifest.webmanifest">
+<title>ACS GLOBAL INTERNET CONNECT</title>
+<style>
+:root{--navy:#102a43;--blue:#1769aa;--teal:#0e9f8a;--bg:#f3f7fb;--ink:#183247}
+*{box-sizing:border-box}body{margin:0;font:16px Arial,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:linear-gradient(120deg,var(--navy),var(--blue));color:white;padding:24px 18px}
+.wrap{max-width:1000px;margin:auto}h1{margin:0 0 8px;font-size:clamp(24px,5vw,36px)}header p{margin:0;opacity:.9}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}button,.tab{border:0;border-radius:10px;padding:11px 14px;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}
+.tab{background:#dce8f2;color:var(--navy)}.tab.active{background:var(--navy);color:#fff}
+main{max-width:1000px;margin:18px auto;padding:0 14px}.card{background:white;border-radius:16px;padding:18px;margin:14px 0;box-shadow:0 4px 18px #18324712}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+label{display:block;font-weight:700;margin:10px 0 5px}input,select,textarea{width:100%;padding:12px;border:1px solid #c8d5df;border-radius:9px;font-size:16px}
+.small{font-size:13px;color:#526879}.badge{display:inline-block;background:#e2f5f0;color:#087b69;border-radius:30px;padding:5px 10px;font-size:12px;font-weight:bold}
+.warning{background:#fff5d9;border-left:4px solid #e2a400;padding:12px;border-radius:8px;line-height:1.45}
+.item{border:1px solid #e0e8ee;border-radius:12px;padding:13px;margin:10px 0}.item h3{margin:0 0 6px}
+.hidden{display:none}.primary{background:var(--teal)}.danger{background:#a83a3a}.muted{background:#e5edf3;color:#183247}
+footer{text-align:center;padding:28px;color:#617586;font-size:13px}
+</style></head>
+<body>
+<header><div class="wrap"><h1>ACS GLOBAL INTERNET CONNECT</h1><p>Connect Anywhere, Share Everywhere</p><div style="margin-top:14px"><span class="badge">Free web prototype</span></div></div></header>
+<main>
+<div class="warning"><b>Prototype notice:</b> This free version demonstrates provider/organisation offers and access requests. Voucher codes are identifiers only. It does not transmit internet, create a VPN/tunnel, collect payments, or confirm payment.</div>
+<nav id="tabs">
+<button class="tab active" data-page="home">Home</button><button class="tab" data-page="receiver">Receiver</button><button class="tab" data-page="provider">Provider</button><button class="tab" data-page="organisation">Organisation</button><button class="tab" data-page="admin">Admin demo</button>
+</nav>
+<section id="home" class="page card">
+<h2>Welcome to ACS GLOBAL</h2><p>Connect internet providers and organisations with people requesting access. Choose a section above to try the demonstration.</p>
+<div class="grid"><div class="item"><h3>For receivers</h3><p>Enter an offer code and request access.</p></div><div class="item"><h3>For providers</h3><p>Create an offer code and manage requests.</p></div><div class="item"><h3>For organisations</h3><p>Publish connectivity offers for members or visitors.</p></div></div>
+</section>
+<section id="receiver" class="page card hidden"><h2>Find an internet offer</h2><label>Offer code</label><input id="lookupCode" placeholder="Example: ACS-123456"><button onclick="lookup()">Find offer</button><div id="offerResult"></div></section>
+<section id="provider" class="page card hidden"><h2>Provider dashboard</h2><p class="small">Create a demo offer for your hotspot service.</p>
+<div class="grid"><div><label>Provider / hotspot name</label><input id="pname" placeholder="My Hotspot"></div><div><label>Data allowance</label><select id="pdata"><option>500 MB</option><option>1 GB</option><option>2 GB</option><option>5 GB</option><option>Unlimited (demo only)</option></select></div><div><label>Duration</label><select id="pduration"><option>1 hour</option><option>3 hours</option><option>1 day</option><option>7 days</option></select></div><div><label>Price (optional; demo record only)</label><input id="pprice" placeholder="e.g. 500 NGN"></div></div>
+<label>Coverage / location notes</label><input id="parea" placeholder="e.g. Around the shop">
+<button class="primary" onclick="createOffer('Provider')">Create offer code</button><div id="providerOffers"></div><h3>Access requests</h3><div id="providerRequests"></div></section>
+<section id="organisation" class="page card hidden"><h2>Organisation dashboard</h2><div class="grid"><div><label>Organisation name</label><input id="oname" placeholder="Organisation name"></div><div><label>Data allowance</label><select id="odata"><option>500 MB</option><option>1 GB</option><option>2 GB</option><option>5 GB</option></select></div><div><label>Duration</label><select id="oduration"><option>1 hour</option><option>1 day</option><option>7 days</option></select></div><div><label>Price (optional; demo record only)</label><input id="oprice" placeholder="e.g. Free"></div></div><label>Who can use this offer?</label><input id="oarea" placeholder="e.g. Registered members"><button class="primary" onclick="createOffer('Organisation')">Create organisation code</button><div id="orgOffers"></div></section>
+<section id="admin" class="page card hidden"><h2>Admin demonstration</h2><p>This local demo has no real accounts or identity verification. Use it to preview the workflow only.</p><button class="muted" onclick="render()">Refresh demo summary</button><div id="adminSummary"></div></section>
+<section class="card"><h3>How to use this demo</h3><ol><li>Open Provider or Organisation and create an offer code.</li><li>Copy the code shown.</li><li>Open Receiver, enter the code, and request access.</li><li>Return to Provider to approve or reject the demo request.</li></ol><p class="small">Demo data is saved only in this browser on this device. It is not shared between different users or phones.</p></section>
+<section class="card"><h3>What is still needed for a real service?</h3><ul><li>A secure online backend and user accounts.</li><li>Authorised networking integration on both the hotspot and receiver sides.</li><li>Appropriate relay/tunnel infrastructure and carrier-plan permission.</li><li>A compliant payment provider, if paid access is offered.</li><li>Security testing and production deployment.</li></ul></section>
+</main><footer>ACS GLOBAL INTERNET CONNECT · Prototype</footer>
+<script>
+const get=()=>JSON.parse(localStorage.getItem('acsOffers')||'[]'),save=x=>localStorage.setItem('acsOffers',JSON.stringify(x));
+const reqs=()=>JSON.parse(localStorage.getItem('acsReqs')||'[]'),saveReq=x=>localStorage.setItem('acsReqs',JSON.stringify(x));
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));document.getElementById(b.dataset.page).classList.remove('hidden');render()});
+function code(){return 'ACS-'+Math.random().toString(10).slice(2,8)}
+function createOffer(type){let name=document.getElementById(type==='Provider'?'pname':'oname').value.trim();if(!name){alert('Please enter a name first.');return}
+let prefix=type==='Provider'?'p':'o',offer={code:code(),type,name,data:document.getElementById(prefix+'data').value,duration:document.getElementById(prefix+'duration').value,price:document.getElementById(prefix+'price').value||'Not specified',area:document.getElementById(prefix+'area').value||'Not specified',created:new Date().toLocaleString()};
+let a=get();a.unshift(offer);save(a);render();alert('Offer created. Your code is '+offer.code)}
+function lookup(){let c=document.getElementById('lookupCode').value.trim().toUpperCase(),o=get().find(x=>x.code===c),el=document.getElementById('offerResult');if(!o){el.innerHTML='<p>No offer found. Check the code.</p>';return}el.innerHTML=`<div class="item"><h3>${esc(o.name)}</h3><p>${esc(o.type)} · ${esc(o.data)} · ${esc(o.duration)}</p><p>Price: ${esc(o.price)} · Coverage: ${esc(o.area)}</p><button class="primary" onclick="requestAccess('${o.code}')">Request access</button></div>`}
+function requestAccess(c){let n=prompt('Enter a display name for this demo request:');if(!n)return;let r=reqs();r.unshift({id:Date.now(),code:c,name:n,status:'Pending'});saveReq(r);alert('Demo request submitted. The provider can review it in the Provider section.')}
+function decide(id,status){let r=reqs();r=r.map(x=>x.id===id?{...x,status}:x);saveReq(r);render()}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function render(){let a=get(),r=reqs();document.getElementById('providerOffers').innerHTML=a.filter(x=>x.type==='Provider').map(x=>`<div class="item"><b>${esc(x.name)}</b> — code <b>${x.code}</b><br>${esc(x.data)} · ${esc(x.duration)} · ${esc(x.price)}</div>`).join('')||'<p class="small">No provider offers yet.</p>';document.getElementById('orgOffers').innerHTML=a.filter(x=>x.type==='Organisation').map(x=>`<div class="item"><b>${esc(x.name)}</b> — code <b>${x.code}</b><br>${esc(x.data)} · ${esc(x.duration)} · ${esc(x.price)}</div>`).join('')||'<p class="small">No organisation offers yet.</p>';document.getElementById('providerRequests').innerHTML=r.map(x=>`<div class="item"><b>${esc(x.name)}</b> requested ${x.code}<br>Status: <b>${x.status}</b>${x.status==='Pending'?`<p><button class="primary" onclick="decide(${x.id},'Approved')">Approve</button> <button class="danger" onclick="decide(${x.id},'Rejected')">Reject</button></p>`:''}</div>`).join('')||'<p class="small">No requests yet.</p>';document.getElementById('adminSummary').innerHTML=`<div class="grid"><div class="item"><h3>${a.length}</h3>Offers created</div><div class="item"><h3>${r.length}</h3>Requests received</div><div class="item"><h3>${r.filter(x=>x.status==='Approved').length}</h3>Approved requests</div></div>`}
+render();
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}
+</script></body></html>
